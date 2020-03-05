@@ -1,0 +1,100 @@
+﻿@model ProyectoAnimales.Models.EF.AnimalitoViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<!--MOSTRAR ALERTA -->
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show div-alert" role="alert">
+        @TempData["msg"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+
+<h1>Agregar Animal</h1>
+<hr />
+
+<form asp-action="Create" asp-controller="Animal" method="post" class="tab-pane">
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="row py-sm-2 div-existe">
+        <label asp-for="Nombre" class="col-sm-2 offset-sm-2"></label>
+        <input asp-for="Nombre" class="form-control col-sm-4" />
+        <span asp-validation-for="Nombre"></span>
+        
+
+    </div>
+
+    <div class="row py-sm-2">
+        <label asp-for="Patas" class="col-sm-2 offset-sm-2"></label>
+        <input asp-for="Patas" class="form-control col-sm-4" />
+        <span asp-validation-for="Patas"></span>
+    </div>
+
+    <div class="row py-sm-2">
+        <label asp-for="IdEstado" class="col-sm-2 offset-sm-2"></label>
+        <input asp-for="IdEstado" class="form-control col-sm-4" />
+        <span asp-validation-for="IdEstado"></span>
+    </div>
+
+    <div class="row py-sm-2 offset-sm-5">
+        <input type="submit" value="Agregar" class="btn btn-primary" />
+    </div>
+
+</form>
+
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+        $("#Nombre").change(function () {
+
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "/Animal/Exist/",
+                data: { nombre: $("#Nombre").val() },
+                success: function (response) {
+
+                    if (response == "1") {
+                        $(".div-existe").append(`
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                El nombre ya existe
+                            </div>
+                        `)
+                    }
+                    else {
+                        $(".div-existe").append(`
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                El nombre esta disponible
+                            </div>
+                        `)
+                    };
+
+
+
+                    console.log(response);
+
+                }
+            });
+
+        })
+
+
+
+       
+
+
+    </script>
+
+}
